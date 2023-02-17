@@ -8,24 +8,27 @@ const fetchBreedDescription = function (breed, callback) {
   request(
     `https://api.thecatapi.com/v1/breeds/search?q=${breed}`,
     (error, response, body) => {
+      // if the url failed
       if (error) {
         callback(error);
+        return;
       }
-
       // use JSON.parse to convert the JSON string into an actual object
       const data = JSON.parse(body);
+
+      // if breed not found
+      if (data[0] === undefined) {
+        callback(error);
+        return;
+      }
       // console log data/body of cat desc
       // console.log("data", data);
       // console.log("typeof data", typeof data);
-      callback(null, data);
+
+      // print breed description
+      return callback(null, data);
     }
   );
 };
-// calling the fetchBreedDescription function
-fetchBreedDescription(breedName, (error, data) => {
-  if (error) {
-    console.log("This URL is incorrect, please use another one");
-  } else {
-    console.log(data);
-  }
-});
+
+module.exports = { fetchBreedDescription };
